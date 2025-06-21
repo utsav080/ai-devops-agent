@@ -1,0 +1,17 @@
+# backend/app.py
+
+from flask import Flask, jsonify, request
+from models import User
+import jwt
+
+app = Flask(__name__)
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    token = request.headers.get("Authorization")
+    if not token or not validate_token(token):
+        return jsonify({"error": "Unauthorized"}), 401
+    users = User.query.all()
+    return jsonify([user.to_dict() for user in users])
+
+def validat
